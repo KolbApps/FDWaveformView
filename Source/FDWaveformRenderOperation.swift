@@ -295,8 +295,9 @@ final public class FDWaveformRenderOperation: Operation {
         context.scaleBy(x: 1 / format.scale, y: 1 / format.scale) // Scale context to account for scaling applied to image
         context.setShouldAntialias(false)
         context.setAlpha(1.0)
-        context.setLineWidth(1.0 / format.scale)
+        context.setLineWidth(5 / format.scale)
         context.setStrokeColor(format.wavesColor.cgColor)
+        context.setFillColor(format.wavesColor.cgColor)
         
         let sampleDrawingScale: CGFloat
         if max == min {
@@ -309,8 +310,12 @@ final public class FDWaveformRenderOperation: Operation {
             let height = (sample - min) * sampleDrawingScale
             context.move(to: CGPoint(x: CGFloat(x), y: verticalMiddle - height))
             context.addLine(to: CGPoint(x: CGFloat(x), y: verticalMiddle + height))
-            context.strokePath();
+            context.strokePath()
         }
+        
+        context.closePath()
+        context.fillPath()
+        
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
             NSLog("FDWaveformView failed to get waveform image from context")
             return nil
